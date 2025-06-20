@@ -1,0 +1,83 @@
+*----------------------------------------------------------------------------------------
+*	Innovus 20.10-p004_1 (64bit) 05/07/2020 20:02 (Linux 2.6.32-431.11.2.el6.x86_64)
+*	
+*
+* 	Date & Time:	2025-Apr-29 02:56:45 (2025-Apr-28 18:56:45 GMT)
+*
+*----------------------------------------------------------------------------------------
+*
+*	Design: encoder
+*
+*	Liberty Libraries used: 
+*	        wc: /afs/ee.ust.hk/amd64_linux26/usr/eelocal/tsmc_icdc/tsmc180/tsmc180_MS_RF_G/SC/tcb018g3d3/Rev280a/Front_End/timing_power_noise/CCS/tcb018g3d3_280a/tcb018g3d3wc_ccs.lib
+*
+*	Power Domain used: 
+*              Rail:        VDD      Voltage:       2.97 
+*
+*       Power View : wc
+*
+*       User-Defined Activity : N.A.
+*
+*       Activity File: N.A.
+*
+*       Hierarchical Global Activity: N.A.
+*
+*       Global Activity: N.A.
+*
+*       Sequential Element Activity: 0.200000
+*
+*       Primary Input Activity: 0.200000
+*
+*       Default icg ratio: N.A.
+*
+*       Global Comb ClockGate Ratio: N.A.
+*
+*	Power Units = 1mW
+*
+*	Time Units = 1e-09 secs 
+*
+*       report_power -outfile reports/design_top.routed.power.rpt
+*
+-----------------------------------------------------------------------------------------
+
+
+Total Power 
+-----------------------------------------------------------------------------------------
+Total Internal Power:        0.02633661 	   72.6090%
+Total Switching Power:       0.00992946 	   27.3751%
+Total Leakage Power:         0.00000575 	    0.0159%
+Total Power:                 0.03627182 
+-----------------------------------------------------------------------------------------
+
+
+Group                           Internal   Switching     Leakage       Total  Percentage 
+                                Power      Power         Power         Power  (%)        
+-----------------------------------------------------------------------------------------
+Sequential                       0.02405   0.0009368   3.458e-06     0.02499        68.9 
+Macro                                  0           0           0           0           0 
+IO                                     0           0           0           0           0 
+Combinational                   0.002284    0.008993   2.294e-06     0.01128        31.1 
+Clock (Combinational)                  0           0           0           0           0 
+Clock (Sequential)                     0           0           0           0           0 
+-----------------------------------------------------------------------------------------
+Total                            0.02634    0.009929   5.752e-06     0.03627         100 
+-----------------------------------------------------------------------------------------
+
+
+Rail                  Voltage   Internal   Switching     Leakage       Total  Percentage 
+                                Power      Power         Power         Power  (%)        
+-----------------------------------------------------------------------------------------
+VDD                      2.97    0.02634    0.009929   5.752e-06     0.03627         100 
+
+
+-----------------------------------------------------------------------------------------
+*	Power Distribution Summary: 
+*                Highest Average Power:                 FE_OFC0_P (CKBD6):         0.003839 
+*                Highest Leakage Power:               pout_reg_3_ (DFKCSND1):        3.099e-07 
+*          Total Cap:      2.86871e-12 F
+*          Total instances in design:    56
+*          Total instances in design with no power:     0
+*          Total instances in design with no activity:     0
+*          Total Fillers and Decap:     0
+-----------------------------------------------------------------------------------------
+
