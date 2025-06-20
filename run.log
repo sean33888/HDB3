@@ -1,0 +1,317 @@
+
+                           Design Compiler Graphical 
+                                 DC Ultra (TM)
+                                  DFTMAX (TM)
+                              Power Compiler (TM)
+                                 DesignWare (R)
+                                 DC Expert (TM)
+                               Design Vision (TM)
+                               HDL Compiler (TM)
+                               VHDL Compiler (TM)
+                                  DFT Compiler
+                               Design Compiler(R)
+
+               Version P-2019.03-SP5 for linux64 - Oct 17, 2019 
+
+                    Copyright (c) 1988 - 2019 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+            or distribution of this software is strictly prohibited.
+Initializing...
+Initializing gui preferences from file  /staff/ee/yhsuai/.synopsys_dv_prefs.tcl
+################################################################################
+# Filename: dc.tcl
+# Author: TIAN Fengshi
+# Email: fengshi.tian@connect.ust.hk
+# Affiliation: Hong Kong University of Science and Technology
+# -------------------------------------------------------------------------------
+# This is the template Design Compiler script for ELEC5160/EESM5020.
+################################################################################
+################################################################################
+# Step 0: create directories for results and reports
+################################################################################
+file mkdir reports; # store area, timing, power reports
+file mkdir results; # store design
+################################################################################
+# Step 1: digital standard cell library set up
+# You should specify the following paths accordingly:
+# - search_path
+# - target_library
+# - link_library
+################################################################################
+set_app_var search_path ". /afs/ee.ust.hk/amd64_linux26/usr/eelocal/tsmc_icdc/tsmc180/tsmc180_MS_RF_G/SC/tcb018g3d3/Rev280a/Front_End/timing_power_noise/CCS/tcb018g3d3_280a/ ../rtl $search_path"
+. /afs/ee.ust.hk/amd64_linux26/usr/eelocal/tsmc_icdc/tsmc180/tsmc180_MS_RF_G/SC/tcb018g3d3/Rev280a/Front_End/timing_power_noise/CCS/tcb018g3d3_280a/ ../rtl . /usr/eelocal/synopsys/syn-vp2019.03-sp5/libraries/syn /usr/eelocal/synopsys/syn-vp2019.03-sp5/dw/syn_ver /usr/eelocal/synopsys/syn-vp2019.03-sp5/dw/sim_ver
+set_app_var target_library "tcb018g3d3wc_ccs.db"
+tcb018g3d3wc_ccs.db
+# set_app_var synthetic_library dw_foundation.sldb
+set_app_var link_library "* $target_library"
+* tcb018g3d3wc_ccs.db
+################################################################################
+# Step 2: import design
+# You should specify the HDL files for your design accordingly.
+# Note: the HDL files should be located in the search_path you defined above.
+# Please do NOT import testbench or behavior memory model here.
+################################################################################
+define_design_lib WORK -path ./WORK
+1
+analyze -format verilog {encoder.v}
+Running PRESTO HDLC
+Compiling source file ../rtl/encoder.v
+Warning:  ../rtl/encoder.v:29: The construct 'declaration initial assignment' is not supported in synthesis; it is ignored. (VER-708)
+Warning:  ../rtl/encoder.v:30: The construct 'declaration initial assignment' is not supported in synthesis; it is ignored. (VER-708)
+Warning:  ../rtl/encoder.v:31: The construct 'declaration initial assignment' is not supported in synthesis; it is ignored. (VER-708)
+Warning:  ../rtl/encoder.v:32: The construct 'declaration initial assignment' is not supported in synthesis; it is ignored. (VER-708)
+Warning:  ../rtl/encoder.v:33: The construct 'declaration initial assignment' is not supported in synthesis; it is ignored. (VER-708)
+Presto compilation completed successfully.
+Loading db file '/afs/ee.ust.hk/amd64_linux26/usr/eelocal/tsmc_icdc/tsmc180/tsmc180_MS_RF_G/SC/tcb018g3d3/Rev280a/Front_End/timing_power_noise/CCS/tcb018g3d3_280a/tcb018g3d3wc_ccs.db'
+Information: Using CCS timing libraries. (TIM-024)
+1
+elaborate encoder; # top module name
+Loading db file '/usr/eelocal/synopsys/syn-vp2019.03-sp5/libraries/syn/gtech.db'
+Loading db file '/usr/eelocal/synopsys/syn-vp2019.03-sp5/libraries/syn/standard.sldb'
+  Loading link library 'tcb018g3d3wc_ccs'
+  Loading link library 'gtech'
+Running PRESTO HDLC
+
+Inferred memory devices in process
+	in routine encoder line 34 in file
+		'../rtl/encoder.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|       arr_reg       | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|      nout_reg       | Flip-flop |   4   |  Y  | N  | N  | N  | N  | N  | N  |
+|       par_reg       | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|      pout_reg       | Flip-flop |   4   |  Y  | N  | N  | N  | N  | N  | N  |
+|        N_reg        | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|       pre_reg       | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|        P_reg        | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully. (encoder)
+Elaborated 1 design.
+Current design is now 'encoder'.
+1
+# store the unmapped results
+write -hierarchy -format ddc -output results/encoder.unmapped.ddc
+Writing ddc file 'results/encoder.unmapped.ddc'.
+1
+################################################################################
+# Step 3: constrain your design
+# You should specify the critical path, the input & output delay and the
+# environment attribute of your design, so that Design Compiler can correctly
+# synthesize your design with the required specfication.
+################################################################################
+# All the constraints are written in the following tcl script
+source design_top.constraints.tcl
+1
+################################################################################
+# Create default path groups
+#
+# Seperate these paths can help improve optimization results.
+################################################################################
+set ports_clock_root   [filter_collection [get_attribute [get_clocks] sources] object_class==port]
+{clk}
+group_path -name REGOUT -to [all_outputs]
+1
+group_path -name REGIN -from [remove_from_collection [all_inputs]   ${ports_clock_root}]
+1
+group_path -name FEEDTHROUGH -from   [remove_from_collection [all_inputs] ${ports_clock_root}] -to [all_outputs]
+1
+################################################################################
+# Apply Additional Optimization Constraints
+################################################################################
+# Prevent assignment statements in the Verilog netlist.
+set_fix_multiple_port_nets -all -buffer_constants
+1
+################################################################################
+# Check for Design Errors. It is a good habit to check the design before you run
+# the synthesis.
+################################################################################
+check_design -summary
+1
+check_design > reports/encoder.check_design.rpt; # dump to the file
+################################################################################
+# Step 4: compile the design
+# There exits lots of option for compile command. Please check the manual of
+# compile for further info.
+################################################################################
+compile
+Information: Evaluating DesignWare library utilization. (UISN-27)
+
+============================================================================
+| DesignWare Building Block Library  |         Version         | Available |
+============================================================================
+| Basic DW Building Blocks           | P-2019.03-DWBB_201903.4 |     *     |
+| Licensed DW Building Blocks        |                         |           |
+============================================================================
+
+
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'encoder'
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+
+  Beginning Mapping Optimizations  (Medium effort)
+  -------------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:01    2035.0      0.00       0.0      13.3                          
+    0:00:01    2035.0      0.00       0.0      13.3                          
+    0:00:01    2035.0      0.00       0.0      13.3                          
+    0:00:01    2035.0      0.00       0.0      13.3                          
+    0:00:01    2035.0      0.00       0.0      13.3                          
+    0:00:01    1526.9      0.00       0.0      13.3                          
+    0:00:01    1526.9      0.00       0.0      13.3                          
+    0:00:01    1526.9      0.00       0.0      13.3                          
+    0:00:01    1526.9      0.00       0.0      13.3                          
+    0:00:01    1526.9      0.00       0.0      13.3                          
+    0:00:01    1555.1      0.00       0.0       0.0                          
+    0:00:01    1555.1      0.00       0.0       0.0                          
+    0:00:01    1555.1      0.00       0.0       0.0                          
+    0:00:01    1555.1      0.00       0.0       0.0                          
+
+
+
+  Beginning Delay Optimization Phase
+  ----------------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:01    1555.1      0.00       0.0       0.0                          
+    0:00:01    1555.1      0.00       0.0       0.0                          
+    0:00:01    1510.0      0.00       0.0      13.3                          
+
+
+  Beginning Design Rule Fixing  (max_transition)  (max_capacitance)
+  ----------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:01    1510.0      0.00       0.0      13.3                          
+    0:00:01    1538.2      0.00       0.0       0.0                          
+
+
+  Beginning Area-Recovery Phase  (cleanup)
+  -----------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:01    1538.2      0.00       0.0       0.0                          
+    0:00:01    1538.2      0.00       0.0       0.0                          
+    0:00:01    1538.2      0.00       0.0       0.0                          
+    0:00:01    1538.2      0.00       0.0       0.0                          
+    0:00:01    1538.2      0.00       0.0       0.0                          
+    0:00:01    1538.2      0.00       0.0       0.0                          
+    0:00:01    1538.2      0.00       0.0       0.0                          
+    0:00:01    1538.2      0.00       0.0       0.0                          
+    0:00:01    1538.2      0.00       0.0       0.0                          
+    0:00:01    1538.2      0.00       0.0       0.0                          
+    0:00:01    1538.2      0.00       0.0       0.0                          
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+1
+################################################################################
+# Note: compile_ultra does not work for some open source libraries, i.e. Nangate
+# since there are some cells missing for these libraries.
+# Sol: use compile instead. You can use compile_ultra for the commerial library
+# such TSMC45nm, which has a complete set of gates supported.
+#
+# compile_ultra -no_autoungroup; # keep hierarchy for the purpose of debug
+################################################################################
+# High-effort area optimization which improves the area without degrading the
+# timing or leakage of the compiled design
+optimize_netlist -area
+Loading db file '/usr/eelocal/synopsys/syn-vp2019.03-sp5/libraries/syn/dw_foundation.sldb'
+Warning: DesignWare synthetic library dw_foundation.sldb is added to the synthetic_library in the current command. (UISN-40)
+Information: Performing power optimization. (PWR-850)
+Alib files are up-to-date.
+Information: Evaluating DesignWare library utilization. (UISN-27)
+
+============================================================================
+| DesignWare Building Block Library  |         Version         | Available |
+============================================================================
+| Basic DW Building Blocks           | P-2019.03-DWBB_201903.4 |     *     |
+| Licensed DW Building Blocks        | P-2019.03-DWBB_201903.4 |     *     |
+============================================================================
+
+
+Loading db file '/afs/ee.ust.hk/amd64_linux26/usr/eelocal/tsmc_icdc/tsmc180/tsmc180_MS_RF_G/SC/tcb018g3d3/Rev280a/Front_End/timing_power_noise/CCS/tcb018g3d3_280a/tcb018g3d3wc_ccs.db'
+Loaded alib file './alib-52/tcb018g3d3wc_ccs.db.alib'
+
+  Updating timing information
+Information: The library cell 'TIEL' in the library 'tcb018g3d3wc_ccs' is not characterized for internal power. (PWR-536)
+Information: The library cell 'TIEH' in the library 'tcb018g3d3wc_ccs' is not characterized for internal power. (PWR-536)
+Information: The target library(s) contains cell(s), other than black boxes, that are not characterized for internal power. (PWR-24)
+
+
+  Beginning Area Optimization
+  -----------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:06    1538.2      0.00       0.0       0.0                              5.5741
+Loading db file '/afs/ee.ust.hk/amd64_linux26/usr/eelocal/tsmc_icdc/tsmc180/tsmc180_MS_RF_G/SC/tcb018g3d3/Rev280a/Front_End/timing_power_noise/CCS/tcb018g3d3_280a/tcb018g3d3wc_ccs.db'
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+1
+################################################################################
+# Step 5: write out final design and reports
+# The files include:
+# - .ddc: binary format used for subsequent Design Compiler sessions
+# - .v: Verilog netlist for gate-level simulation and P&R
+# - .sdf: SDF backannotated file containing gate and net latency
+# - .sdc: SDC constraints for ASCII flow
+################################################################################
+change_names -rules verilog -hierarchy
+1
+# Write out design
+write -format verilog -hierarchy -output results/encoder.mapped.v
+Writing verilog file '/dfs/usrhome/yhsuai/elec5160/design1/syn/results/encoder.mapped.v'.
+1
+write -format ddc -hierarchy -output results/encoder.mapped.ddc
+Writing ddc file 'results/encoder.mapped.ddc'.
+1
+write_sdf results/encoder.mapped.sdf
+Information: Annotated 'cell' delays are assumed to include load delay. (UID-282)
+Information: Writing timing information to file '/dfs/usrhome/yhsuai/elec5160/design1/syn/results/encoder.mapped.sdf'. (WT-3)
+Information: Updating design information... (UID-85)
+1
+write_sdc -nosplit results/encoder.mapped.sdc
+1
+# Generate reports
+report_constraint > reports/encoder.mapped.constraint.rpt
+report_qor > reports/encoder.mapped.qor.rpt
+report_timing -transition_time -nets -attribute -nosplit -delay max   > reports/encoder.mapped.max_timing.rpt
+report_area -nosplit > reports/encoder.mapped.area.rpt
+report_power -nosplit > reports/encoder.mapped.power.rpt
+################################################################################
+# Exit Design Compiler
+################################################################################
+exit
+
+Thank you...

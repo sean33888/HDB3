@@ -1,0 +1,3 @@
+the delay of the output is 4 clock cycle after the input signal
+the clock frequency is 2MHz same as the data rate
+
