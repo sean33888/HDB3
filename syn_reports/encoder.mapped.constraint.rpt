@@ -1,0 +1,22 @@
+ 
+****************************************
+Report : constraint
+Design : encoder
+Version: P-2019.03-SP5
+Date   : Mon Apr 21 15:17:26 2025
+****************************************
+
+    Constraint                                     Slack
+    ----------------------------------------------------
+    max_leakage_power                              -2.41  (VIOLATED)
+
+
+    Constraint                                       Cost
+    -----------------------------------------------------
+    multiport_net                                    0.00 (MET)
+    max_transition                                   0.00 (MET)
+    max_capacitance                                  0.00 (MET)
+    max_leakage_power                                2.41 (VIOLATED)
+
+
+1

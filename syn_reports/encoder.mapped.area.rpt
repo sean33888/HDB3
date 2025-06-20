@@ -1,0 +1,30 @@
+ 
+****************************************
+Report : area
+Design : encoder
+Version: P-2019.03-SP5
+Date   : Mon Apr 21 15:17:26 2025
+****************************************
+
+Library(s) Used:
+
+    tcb018g3d3wc_ccs (File: /afs/ee.ust.hk/amd64_linux26/usr/eelocal/tsmc_icdc/tsmc180/tsmc180_MS_RF_G/SC/tcb018g3d3/Rev280a/Front_End/timing_power_noise/CCS/tcb018g3d3_280a/tcb018g3d3wc_ccs.db)
+
+Number of ports:                            5
+Number of nets:                            31
+Number of cells:                           28
+Number of combinational cells:             21
+Number of sequential cells:                 7
+Number of macros/black boxes:               0
+Number of buf/inv:                          5
+Number of references:                      13
+
+Combinational area:                290.707208
+Buf/Inv area:                       42.336001
+Noncombinational area:             414.892807
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                   705.600015
+Total area:                 undefined
+1
